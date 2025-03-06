@@ -1,43 +1,84 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+package Week3;
+
+import java.io.*;
+import java.nio.file.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class run {
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("생성할 폴더 이름을 입력하세요: ");
-        String directoryPath = scanner.nextLine().trim();
-        scanner.close();
-        
-        List<String> problemNumbers = List.of("24416", "2775", "2579", "11053", "1932", "2193", "11057", "11054", "1904", "2565");
-        
-        // 폴더 생성
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdir();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+            // 원본 디렉터리와 새로운 디렉터리 이름 입력 받기
+            String currentDirectory = "C:/Users/USER/Desktop/2025-MAR-PS/Week1";
+          
+            String sourceDirectory = currentDirectory + "/problem";
+
+            System.out.print("새로 생성할 디렉터리 이름을 입력하세요: ");
+            String newDirectoryName = reader.readLine().trim();
+            String targetDirectory = currentDirectory + "/" + newDirectoryName;
+
+            // 디렉터리 복사
+            copyDirectory(Paths.get(sourceDirectory), Paths.get(targetDirectory));
+
+            // 새로운 패키지 이름으로 업데이트
+            updatePackageNameInDirectory(targetDirectory, newDirectoryName);
+
+            System.out.println("모든 .java 파일이 복사되고 package 이름이 성공적으로 변경되었습니다.");
+        } catch (IOException e) {
+            System.err.println("오류가 발생했습니다: " + e.getMessage());
         }
-        
-        // 파일 생성
-        for (String problemNumber : problemNumbers) {
-            String fileName = "B" + problemNumber + ".java";
-            File file = new File(directoryPath + File.separator + fileName);
+    }
+
+    public static void copyDirectory(Path source, Path target) throws IOException {
+        if (!Files.exists(source)) {
+            throw new IOException("원본 디렉터리가 존재하지 않습니다: " + source.toAbsolutePath());
+        }
+
+        Files.walk(source).forEach(sourcePath -> {
+            try {
+                Path targetPath = target.resolve(source.relativize(sourcePath));
+                if (Files.isDirectory(sourcePath)) {
+                    Files.createDirectories(targetPath);
+                } else {
+                    Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                System.err.println("디렉터리를 복사하는 중 오류가 발생했습니다: " + e.getMessage());
+            }
+        });
+    }
+
+    public static void updatePackageNameInDirectory(String directoryPath, String newPackageName) {
+        try {
+            Files.walk(Paths.get(directoryPath))
+                .filter(Files::isRegularFile)
+                .filter(path -> path.toString().endsWith(".java"))
+                .forEach(path -> updatePackageNameInFile(path, newPackageName));
+        } catch (IOException e) {
+            System.err.println("디렉터리를 처리하는 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    public static void updatePackageNameInFile(Path filePath, String newPackageName) {
+        try {
+            // 파일 읽기
+            List<String> lines = Files.readAllLines(filePath);
             
-            if (!file.exists()) {
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("package " + directoryPath + ";\n\n");
-                    writer.write("import java.io.IOException;\n\n");
-                    writer.write("public class B" + problemNumber + " {\n");
-                    writer.write("    public static void main(String[] args) throws IOException {\n");
-                    writer.write("        \n");
-                    writer.write("    }\n");
-                    writer.write("}\n");
-                } catch (IOException e) {
-                    System.out.println("파일 생성 중 오류 발생: " + fileName);
+            // 첫 번째 package 라인을 새로운 패키지 이름으로 교체
+            for (int i = 0; i < lines.size(); i++) {
+                if (lines.get(i).trim().startsWith("package ")) {
+                    lines.set(i, "package " + newPackageName + ";");
+                    break;
                 }
             }
+
+            // 파일 쓰기
+            Files.write(filePath, lines);
+            System.out.println("Updated package in " + filePath);
+        } catch (IOException e) {
+            System.err.println("파일 처리 중 오류가 발생했습니다: " + filePath + ", " + e.getMessage());
         }
-        System.out.println("파일 생성 완료.");
     }
 }
