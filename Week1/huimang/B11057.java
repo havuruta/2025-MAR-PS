@@ -1,4 +1,3 @@
-package problem;
 
 import java.io.IOException;
 
