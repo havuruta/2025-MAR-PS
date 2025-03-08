@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 
 public class B24416 {
 
-    // memoization을 위해.
+    // memoization을 위해. 근데 이건 탑다운 방식 같은데....??
     static int[] memo;
     
 
@@ -30,6 +30,9 @@ public class B24416 {
         fib1(N);
 
         // 메모이제이션 호출
+        // 우선은 초반에 예측되는 값을 넣어줌.
+        memo[1] = memo[2] = 1;
+
         fib2(N);
 
         bw.write(String.valueOf(countRe) + " " + String.valueOf(countDp));
@@ -56,8 +59,6 @@ public class B24416 {
     // DP로 풀기
     public static int fib2(int n) {
         
-        // 우선은 초반에 예측되는 값을 넣어줌.
-        memo[1] = memo[2] = 1;
 
         // 이후부터, 이전의 값을 이용해서 메모이제이션용 배열에 계속해서 저장.
         for(int i = 3; i<=n; i++) {
