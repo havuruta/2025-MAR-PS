@@ -35,6 +35,7 @@ public class B2579 {
         // 3부터는 이제 연속으로 못 밟아서 뭐가 더 큰지 판단해야함..
 
         for(int i = 3; i<=N; i++) {
+            // dp[i-2] 는 이전 계단은 건너뛰고 자기 밟은거임, dp[i-3] + stairs[i-1]은 이번 계단 전전전계단을 밟고, 전계단을 밟고, 이번계단 밟은거
             dp[i] = Math.max(dp[i-2], dp[i-3] + stairs[i-1]) + stairs[i];
         }
    
