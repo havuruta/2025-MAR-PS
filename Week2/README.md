@@ -31,7 +31,7 @@
 2. **[2263 - 트리의 순회](https://www.acmicpc.net/problem/2263)**  
    - 인오더와 포스트오더가 주어졌을 때 프리오더를 구하는 문제입니다.
 
-3. **[2872 - 압축](https://www.acmicpc.net/problem/2872)**  
+3. **[1662 - 압축](https://www.acmicpc.net/problem/1662)**  
    - 압축된 문자열을 해제하는 문제입니다.
 
 4. **[3049 - ZOAC](https://www.acmicpc.net/problem/3049)**  
