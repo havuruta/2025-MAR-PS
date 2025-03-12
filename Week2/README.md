@@ -18,7 +18,7 @@
 4. **[4779 - 칸토어 집합](https://www.acmicpc.net/problem/4779)**  
    - 칸토어 집합을 재귀적으로 구현하여 출력하는 문제입니다.
 
-5. **[1491 - 큰 수 구성하기](https://www.acmicpc.net/problem/1491)**  
+5. **[18511 - 큰 수 구성하기](https://www.acmicpc.net/problem/18511)**  
    - 주어진 숫자 집합을 이용해 만들 수 있는 가장 큰 수를 찾는 문제입니다.
 
 ---
